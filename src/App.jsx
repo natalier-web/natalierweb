@@ -236,6 +236,21 @@ const [pendingCancelBooking, setPendingCancelBooking] = useState(null);
   const [masterUploading, setMasterUploading] = useState(false);
   const [galleryUploading, setGalleryUploading] = useState(false);
 
+  // ადმინ კალენდარი
+  const [calendarViewDate, setCalendarViewDate] = useState(() => new Date().toLocaleDateString('en-CA'));
+  const [calendarViewMaster, setCalendarViewMaster] = useState('all');
+
+  // ადმინ ამოწერა
+  const [showAdminCancelModal, setShowAdminCancelModal] = useState(false);
+  const [adminCancelBooking, setAdminCancelBooking] = useState(null);
+
+  // ადმინ გადატანა
+  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [rescheduleBooking, setRescheduleBooking] = useState(null);
+  const [rescheduleDate, setRescheduleDate] = useState('');
+  const [rescheduleTime, setRescheduleTime] = useState('');
+  const [rescheduling, setRescheduling] = useState(false);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUserSession(session);
@@ -441,6 +456,38 @@ const handleCancelBooking = async (b) => {
     }, 3000);
   }
 };
+
+  // ადმინის მიერ ჩანიშვნის გაუქმება (SMS-ით)
+  const handleAdminCancelBooking = async () => {
+    const b = adminCancelBooking;
+    if (!b) return;
+    const { error } = await supabase.from('bookings').delete().eq('id', b.id);
+    if (!error) {
+      const msg = `პატივცემულო ${b.name}, ბოდიშს გიხდით. სამწუხაროდ, თქვენს მიერ ჩაწერილ დროს (${b.date}, ${b.time}) ვერ ხერხდება თქვენი მომსახურება სალონ ნატალიერში. გთხოვთ დაგვიკავშირდეთ ახალი ვიზიტის დასანიშნად. ბოდიში და გმადლობთ გაგებისთვის!`;
+      await triggerSmsNotification(b.phone, msg);
+      fetchData();
+      setShowAdminCancelModal(false);
+      setAdminCancelBooking(null);
+    }
+  };
+
+  // ადმინის მიერ ჩანიშვნის გადატანა (SMS-ით)
+  const handleRescheduleBooking = async () => {
+    const b = rescheduleBooking;
+    if (!b || !rescheduleDate || !rescheduleTime) return;
+    setRescheduling(true);
+    const { error } = await supabase.from('bookings').update({ date: rescheduleDate, time: rescheduleTime }).eq('id', b.id);
+    if (!error) {
+      const msg = `პატივცემულო ${b.name}, სამწუხაროდ თქვენს მიერ არჩეულ დროს (${b.date}, ${b.time}) ვერ მოხერხდა მომსახურება. თქვენმა ჩაწერამ გადაინაცვლა: ${rescheduleDate}, ${rescheduleTime}. გთხოვთ დაადასტუროთ ან დაგვიკავშირდეთ: +995 555 26 56 46. პატივისცემით, სალონი ნატალიერი.`;
+      await triggerSmsNotification(b.phone, msg);
+      fetchData();
+      setShowRescheduleModal(false);
+      setRescheduleBooking(null);
+      setRescheduleDate('');
+      setRescheduleTime('');
+    }
+    setRescheduling(false);
+  };
 
   const handleAdminLogin = async (e) => {
     e.preventDefault();
@@ -823,58 +870,161 @@ const handleCancelBooking = async (b) => {
 
                 <div className="admin-content" style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
                   
-                  {/* TAB 1: ჯავშნები */}
-                  {adminTab === 'bookings' && (
+                  {/* TAB 1: ჯავშნები — კალენდარი */}
+                  {adminTab === 'bookings' && (() => {
+                    // კალენდარის ლოგიკა
+                    const filtered = calendarViewMaster === 'all'
+                      ? dbBookings
+                      : dbBookings.filter(b => b.master_name === calendarViewMaster);
+
+                    // შერჩეული დღის ჩანიშვნები
+                    const dayBookings = filtered.filter(b => b.date === calendarViewDate).sort((a,b) => a.time.localeCompare(b.time));
+
+                    // კვირის 7 დღე calendarViewDate-ის კვირიდან
+                    const getWeekDays = (dateStr) => {
+                      const d = new Date(dateStr);
+                      const day = d.getDay();
+                      const monday = new Date(d);
+                      monday.setDate(d.getDate() - (day === 0 ? 6 : day - 1));
+                      const days = [];
+                      const names = ['კვირა','ორშ','სამშ','ოთხშ','ხუთშ','პარ','შაბ'];
+                      for (let i = 0; i < 7; i++) {
+                        const dd = new Date(monday);
+                        dd.setDate(monday.getDate() + i);
+                        days.push({ fullDate: dd.toLocaleDateString('en-CA'), dayName: names[dd.getDay()], dayNum: dd.getDate(), month: dd.getMonth()+1 });
+                      }
+                      return days;
+                    };
+
+                    const weekDays = getWeekDays(calendarViewDate);
+                    const today = new Date().toLocaleDateString('en-CA');
+
+                    const goWeek = (dir) => {
+                      const d = new Date(calendarViewDate);
+                      d.setDate(d.getDate() + dir * 7);
+                      setCalendarViewDate(d.toLocaleDateString('en-CA'));
+                    };
+
+                    // რამდენი ჩანიშვნა აქვს კონკრეტულ დღეს
+                    const countForDay = (dateStr) => filtered.filter(b => b.date === dateStr).length;
+
+                    // დღის სახელი სრულად
+                    const fullDayName = (dateStr) => {
+                      const d = new Date(dateStr);
+                      const names = ['კვირა','ორშაბათი','სამშაბათი','ოთხშაბათი','ხუთშაბათი','პარასკევი','შაბათი'];
+                      return names[d.getDay()];
+                    };
+
+                    return (
                     <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
-                        <h2 style={{ fontSize: '1.4rem', fontWeight: '400', margin: 0 }}>შემოსული რეზერვაციები</h2>
-                        
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#120808', padding: '6px 15px', border: '1px solid #1a1010' }}>
-                          <Filter size={14} color={theme.accent} />
-                          <select 
-                            value={bookingFilterMaster} 
-                            onChange={e => setBookingFilterMaster(e.target.value)} 
-                            style={{ padding: '8px 30px 8px 10px', border: 'none !important', backgroundColor: 'transparent !important', fontSize: '0.85rem', cursor: 'pointer' }}
-                          >
+                      {/* Header: ფილტრი + ნავიგაცია */}
+                      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'24px', flexWrap:'wrap', gap:'12px' }}>
+                        <div style={{ display:'flex', alignItems:'center', gap:'12px' }}>
+                          <h2 style={{ fontSize:'1.3rem', fontWeight:'400', margin:0, letterSpacing:'1px' }}>ჩანიშვნების კალენდარი</h2>
+                          <span style={{ backgroundColor:'rgba(220,38,38,0.12)', border:'1px solid rgba(220,38,38,0.3)', color:'#dc2626', fontSize:'0.75rem', padding:'3px 10px', fontWeight:'700' }}>
+                            {filtered.length} სულ
+                          </span>
+                        </div>
+                        <div style={{ display:'flex', alignItems:'center', gap:'10px' }}>
+                          <select value={calendarViewMaster} onChange={e => setCalendarViewMaster(e.target.value)}
+                            style={{ padding:'8px 12px', fontSize:'0.8rem', cursor:'pointer', minWidth:'160px' }}>
                             <option value="all">ყველა სპეციალისტი</option>
-                            {dbMasters.map(m => (
-                              <option key={m.id} value={m.name}>{m.name} ({m.service})</option>
-                            ))}
+                            {dbMasters.map(m => <option key={m.id} value={m.name}>{m.name}</option>)}
                           </select>
+                          <button onClick={() => setCalendarViewDate(today)}
+                            style={{ padding:'8px 14px', backgroundColor: calendarViewDate===today ? '#dc2626':'transparent', color: calendarViewDate===today ? '#fff':'#aaa', border:'1px solid #333', fontSize:'0.75rem', cursor:'pointer', letterSpacing:'1px', transition:'all 0.2s' }}>
+                            დღეს
+                          </button>
                         </div>
                       </div>
 
-                      <div className="table-scroll">
-                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                        <thead>
-                          <tr style={{ borderBottom: '1px solid #222', color: '#666', fontSize: '0.85rem' }}>
-                            <th style={{ padding: '15px' }}>კლიენტი</th>
-                            <th style={{ padding: '15px' }}>ტელეფონი</th>
-                            <th style={{ padding: '15px' }}>სერვისი</th>
-                            <th style={{ padding: '15px' }}>სპეციალისტი</th>
-                            <th style={{ padding: '15px' }}>თარიღი / დრო</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {filteredBookings.length > 0 ? filteredBookings.map(b => (
-                            <tr key={b.id} style={{ borderBottom: '1px solid #111', fontSize: '0.9rem' }}>
-                              <td style={{ padding: '15px', fontWeight: '600' }}>{b.name}</td>
-                              <td style={{ padding: '15px', color: '#aaa' }}>{b.phone}</td>
-                              <td style={{ padding: '15px' }}><span style={{ color: theme.accent }}>{b.service}</span></td>
-                              <td style={{ padding: '15px', color: '#fff', fontWeight: '500' }}>{b.master_name}</td>
-                              <td style={{ padding: '15px' }}><b>{b.date}</b> | {b.time}</td>
-                            </tr>
-                          )) : (
-                            <tr>
-                              <td colSpan="5" style={{ padding: '30px', textAlign: 'center', color: '#444', fontSize: '0.9rem' }}>ჩანაწერები ვერ მოიძებნა.</td>
-                            </tr>
-                          )}
-                        </tbody>
-                      </table>
+                      {/* კვირის ნავიგაცია */}
+                      <div style={{ display:'flex', alignItems:'center', gap:'8px', marginBottom:'16px' }}>
+                        <button onClick={() => goWeek(-1)} style={{ background:'none', border:'1px solid #333', color:'#aaa', padding:'6px 12px', cursor:'pointer', fontSize:'1rem' }}>‹</button>
+                        <div style={{ display:'grid', gridTemplateColumns:'repeat(7, 1fr)', flex:1, gap:'4px' }}>
+                          {weekDays.map(d => {
+                            const count = countForDay(d.fullDate);
+                            const isSelected = d.fullDate === calendarViewDate;
+                            const isToday = d.fullDate === today;
+                            return (
+                              <button key={d.fullDate} onClick={() => setCalendarViewDate(d.fullDate)}
+                                style={{ padding:'10px 4px', border: isSelected ? '1px solid #dc2626' : '1px solid #222', backgroundColor: isSelected ? 'rgba(220,38,38,0.15)' : isToday ? 'rgba(255,255,255,0.04)' : '#120808', cursor:'pointer', textAlign:'center', transition:'all 0.2s', position:'relative' }}>
+                                <div style={{ fontSize:'0.65rem', color: isSelected ? '#dc2626' : '#666', textTransform:'uppercase', letterSpacing:'1px' }}>{d.dayName}</div>
+                                <div style={{ fontSize:'1.1rem', fontWeight:'600', color: isSelected ? '#fff' : isToday ? '#fff' : '#aaa', margin:'3px 0' }}>{d.dayNum}</div>
+                                {count > 0 && (
+                                  <div style={{ fontSize:'0.65rem', backgroundColor:'#dc2626', color:'#fff', borderRadius:'10px', padding:'1px 5px', display:'inline-block', fontWeight:'700' }}>{count}</div>
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <button onClick={() => goWeek(1)} style={{ background:'none', border:'1px solid #333', color:'#aaa', padding:'6px 12px', cursor:'pointer', fontSize:'1rem' }}>›</button>
+                      </div>
+
+                      {/* შერჩეული დღის ჩანიშვნები */}
+                      <div style={{ borderTop:'1px solid #1a1010', paddingTop:'20px' }}>
+                        <div style={{ display:'flex', alignItems:'center', gap:'10px', marginBottom:'16px' }}>
+                          <h3 style={{ margin:0, fontSize:'1rem', fontWeight:'400', color:'#aaa' }}>
+                            {fullDayName(calendarViewDate)}, {calendarViewDate}
+                          </h3>
+                          <span style={{ color:'#555', fontSize:'0.8rem' }}>— {dayBookings.length} ჩანიშვნა</span>
+                        </div>
+
+                        {dayBookings.length === 0 ? (
+                          <div style={{ textAlign:'center', padding:'50px 20px', color:'#444', border:'1px dashed #1a1010', fontSize:'0.9rem' }}>
+                            ამ დღეს ჩანიშვნები არ არის
+                          </div>
+                        ) : (
+                          <div style={{ display:'flex', flexDirection:'column', gap:'8px' }}>
+                            {dayBookings.map(b => (
+                              <div key={b.id} style={{ display:'flex', alignItems:'center', gap:'0', backgroundColor:'#120808', border:'1px solid #1a1010', overflow:'hidden', transition:'border-color 0.2s' }}
+                                onMouseEnter={e => e.currentTarget.style.borderColor='#333'}
+                                onMouseLeave={e => e.currentTarget.style.borderColor='#1a1010'}>
+                                
+                                {/* დრო */}
+                                <div style={{ padding:'16px 20px', borderRight:'1px solid #1a1010', minWidth:'75px', textAlign:'center', backgroundColor:'rgba(220,38,38,0.06)' }}>
+                                  <div style={{ fontSize:'1rem', fontWeight:'700', color:'#dc2626' }}>{b.time}</div>
+                                </div>
+
+                                {/* კლიენტი */}
+                                <div style={{ padding:'12px 20px', flex:1 }}>
+                                  <div style={{ fontWeight:'600', fontSize:'0.95rem', marginBottom:'3px' }}>{b.name}</div>
+                                  <div style={{ display:'flex', gap:'16px', fontSize:'0.78rem', color:'#666' }}>
+                                    <span>📞 {b.phone}</span>
+                                    <span style={{ color:'#dc2626' }}>{b.service}</span>
+                                    <span>👤 {b.master_name}</span>
+                                  </div>
+                                </div>
+
+                                {/* ღილაკები */}
+                                <div style={{ display:'flex', gap:'0', borderLeft:'1px solid #1a1010' }}>
+                                  <button
+                                    onClick={() => { setRescheduleBooking(b); setRescheduleDate(b.date); setRescheduleTime(b.time); setShowRescheduleModal(true); }}
+                                    title="გადატანა"
+                                    style={{ padding:'14px 16px', background:'none', border:'none', borderRight:'1px solid #1a1010', color:'#888', cursor:'pointer', fontSize:'0.75rem', textTransform:'uppercase', letterSpacing:'1px', transition:'all 0.2s', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px' }}
+                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor='rgba(59,130,246,0.1)'; e.currentTarget.style.color='#60a5fa'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor='transparent'; e.currentTarget.style.color='#888'; }}>
+                                    <span style={{ fontSize:'1rem' }}>📅</span>
+                                    <span>გადატანა</span>
+                                  </button>
+                                  <button
+                                    onClick={() => { setAdminCancelBooking(b); setShowAdminCancelModal(true); }}
+                                    title="ამოწერა"
+                                    style={{ padding:'14px 16px', background:'none', border:'none', color:'#888', cursor:'pointer', fontSize:'0.75rem', textTransform:'uppercase', letterSpacing:'1px', transition:'all 0.2s', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px' }}
+                                    onMouseEnter={e => { e.currentTarget.style.backgroundColor='rgba(220,38,38,0.1)'; e.currentTarget.style.color='#dc2626'; }}
+                                    onMouseLeave={e => { e.currentTarget.style.backgroundColor='transparent'; e.currentTarget.style.color='#888'; }}>
+                                    <span style={{ fontSize:'1rem' }}>✕</span>
+                                    <span>ამოწერა</span>
+                                  </button>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     </div>
-                  )}
-
+                    );
+                  })()}
                   {/* TAB 2: სპეციალისტები */}
                   {adminTab === 'masters' && (
                     <div className="admin-masters-layout" style={{ display: 'flex', gap: '40px' }}>
@@ -1278,6 +1428,79 @@ const handleCancelBooking = async (b) => {
   </div>
 )}
       
+{/* MODAL 5: ადმინ — ამოწერა */}
+{showAdminCancelModal && adminCancelBooking && (
+  <div className="modal-overlay" onClick={() => setShowAdminCancelModal(false)} style={{ position:'fixed', top:0, left:0, width:'100vw', height:'100vh', backgroundColor:'rgba(0,0,0,0.88)', backdropFilter:'blur(10px)', zIndex:3000, display:'flex', justifyContent:'center', alignItems:'center', padding:'20px' }}>
+    <div className="modal-box" onClick={e => e.stopPropagation()} style={{ backgroundColor:'#0d0a0a', border:'1px solid rgba(220,38,38,0.4)', width:'100%', maxWidth:'460px', padding:'40px', position:'relative' }}>
+      <button onClick={() => setShowAdminCancelModal(false)} style={{ position:'absolute', top:'20px', right:'20px', background:'none', border:'none', color:'#666', cursor:'pointer' }}><X size={20}/></button>
+      <div style={{ textAlign:'center', marginBottom:'24px' }}>
+        <div style={{ fontSize:'2rem', marginBottom:'8px' }}>✕</div>
+        <h2 style={{ fontSize:'1.1rem', fontWeight:'600', letterSpacing:'2px', textTransform:'uppercase', margin:'0 0 6px', color:'#dc2626' }}>ჩანიშვნის გაუქმება</h2>
+        <p style={{ color:'#666', fontSize:'0.82rem', margin:0 }}>კლიენტს გაეგზავნება SMS შეტყობინება</p>
+      </div>
+      <div style={{ backgroundColor:'#1a0808', border:'1px solid #2a1010', padding:'16px', marginBottom:'24px' }}>
+        <div style={{ fontWeight:'700', fontSize:'0.95rem', marginBottom:'6px' }}>{adminCancelBooking.name}</div>
+        <div style={{ color:'#888', fontSize:'0.82rem', display:'flex', flexDirection:'column', gap:'3px' }}>
+          <span>📞 {adminCancelBooking.phone}</span>
+          <span>📅 {adminCancelBooking.date} — {adminCancelBooking.time}</span>
+          <span>💇 {adminCancelBooking.service} · {adminCancelBooking.master_name}</span>
+        </div>
+      </div>
+      <div style={{ backgroundColor:'#111', border:'1px solid #222', padding:'14px', marginBottom:'24px', fontSize:'0.8rem', color:'#aaa', lineHeight:'1.6' }}>
+        <span style={{ color:'#666', fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'1px', display:'block', marginBottom:'6px' }}>SMS ტექსტი:</span>
+        პატივცემულო {adminCancelBooking.name}, ბოდიშს გიხდით. სამწუხაროდ, თქვენს მიერ ჩაწერილ დროს ({adminCancelBooking.date}, {adminCancelBooking.time}) ვერ ხერხდება თქვენი მომსახურება სალონ ნატალიერში. გთხოვთ დაგვიკავშირდეთ ახალი ვიზიტის დასანიშნად. ბოდიში და გმადლობთ გაგებისთვის!
+      </div>
+      <div style={{ display:'flex', gap:'10px' }}>
+        <button onClick={() => setShowAdminCancelModal(false)} style={{ flex:1, padding:'14px', background:'none', border:'1px solid #333', color:'#888', fontSize:'0.82rem', cursor:'pointer' }}>გაუქმება</button>
+        <button onClick={handleAdminCancelBooking} style={{ flex:1, padding:'14px', backgroundColor:'#dc2626', color:'#fff', border:'none', fontSize:'0.82rem', fontWeight:'700', cursor:'pointer', letterSpacing:'1px', textTransform:'uppercase' }}>SMS + ამოწერა</button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* MODAL 6: ადმინ — გადატანა */}
+{showRescheduleModal && rescheduleBooking && (
+  <div className="modal-overlay" onClick={() => setShowRescheduleModal(false)} style={{ position:'fixed', top:0, left:0, width:'100vw', height:'100vh', backgroundColor:'rgba(0,0,0,0.88)', backdropFilter:'blur(10px)', zIndex:3000, display:'flex', justifyContent:'center', alignItems:'center', padding:'20px' }}>
+    <div className="modal-box" onClick={e => e.stopPropagation()} style={{ backgroundColor:'#0d0a0a', border:'1px solid rgba(59,130,246,0.35)', width:'100%', maxWidth:'460px', padding:'40px', position:'relative' }}>
+      <button onClick={() => setShowRescheduleModal(false)} style={{ position:'absolute', top:'20px', right:'20px', background:'none', border:'none', color:'#666', cursor:'pointer' }}><X size={20}/></button>
+      <div style={{ textAlign:'center', marginBottom:'24px' }}>
+        <div style={{ fontSize:'2rem', marginBottom:'8px' }}>📅</div>
+        <h2 style={{ fontSize:'1.1rem', fontWeight:'600', letterSpacing:'2px', textTransform:'uppercase', margin:'0 0 6px', color:'#60a5fa' }}>ჩანიშვნის გადატანა</h2>
+        <p style={{ color:'#666', fontSize:'0.82rem', margin:0 }}>კლიენტს გაეგზავნება SMS ახალი დროით</p>
+      </div>
+      <div style={{ backgroundColor:'#080d1a', border:'1px solid #101a2a', padding:'16px', marginBottom:'20px' }}>
+        <div style={{ fontWeight:'700', fontSize:'0.95rem', marginBottom:'6px' }}>{rescheduleBooking.name}</div>
+        <div style={{ color:'#888', fontSize:'0.82rem' }}>
+          ამჟამინდელი: <span style={{ color:'#60a5fa' }}>{rescheduleBooking.date} — {rescheduleBooking.time}</span>
+        </div>
+      </div>
+      <div style={{ display:'flex', gap:'10px', marginBottom:'20px' }}>
+        <div style={{ flex:1 }}>
+          <label style={{ display:'block', fontSize:'0.72rem', color:'#666', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'6px' }}>ახალი თარიღი</label>
+          <input type="date" value={rescheduleDate} onChange={e => setRescheduleDate(e.target.value)} style={{ width:'100%', padding:'12px', fontSize:'0.9rem' }} />
+        </div>
+        <div style={{ flex:1 }}>
+          <label style={{ display:'block', fontSize:'0.72rem', color:'#666', textTransform:'uppercase', letterSpacing:'1px', marginBottom:'6px' }}>ახალი საათი</label>
+          <input type="time" value={rescheduleTime} onChange={e => setRescheduleTime(e.target.value)} style={{ width:'100%', padding:'12px', fontSize:'0.9rem' }} />
+        </div>
+      </div>
+      {rescheduleDate && rescheduleTime && (
+        <div style={{ backgroundColor:'#111', border:'1px solid #222', padding:'14px', marginBottom:'20px', fontSize:'0.8rem', color:'#aaa', lineHeight:'1.6' }}>
+          <span style={{ color:'#666', fontSize:'0.72rem', textTransform:'uppercase', letterSpacing:'1px', display:'block', marginBottom:'6px' }}>SMS ტექსტი:</span>
+          პატივცემულო {rescheduleBooking.name}, სამწუხაროდ თქვენს მიერ არჩეულ დროს ({rescheduleBooking.date}, {rescheduleBooking.time}) ვერ მოხერხდა მომსახურება. თქვენმა ჩაწერამ გადაინაცვლა: {rescheduleDate}, {rescheduleTime}. გთხოვთ დაადასტუროთ ან დაგვიკავშირდეთ: +995 555 26 56 46. პატივისცემით, სალონი ნატალიერი.
+        </div>
+      )}
+      <div style={{ display:'flex', gap:'10px' }}>
+        <button onClick={() => setShowRescheduleModal(false)} style={{ flex:1, padding:'14px', background:'none', border:'1px solid #333', color:'#888', fontSize:'0.82rem', cursor:'pointer' }}>გაუქმება</button>
+        <button onClick={handleRescheduleBooking} disabled={!rescheduleDate || !rescheduleTime || rescheduling}
+          style={{ flex:2, padding:'14px', backgroundColor: (!rescheduleDate || !rescheduleTime || rescheduling) ? '#1a2a3a' : '#3b82f6', color: (!rescheduleDate || !rescheduleTime || rescheduling) ? '#555' : '#fff', border:'none', fontSize:'0.82rem', fontWeight:'700', cursor: (!rescheduleDate || !rescheduleTime || rescheduling) ? 'not-allowed':'pointer', letterSpacing:'1px', textTransform:'uppercase', display:'flex', alignItems:'center', justifyContent:'center', gap:'8px' }}>
+          {rescheduling ? <><Loader2 size={14}/> იგზავნება...</> : 'SMS + გადატანა'}
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
