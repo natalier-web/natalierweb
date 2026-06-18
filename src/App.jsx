@@ -1212,7 +1212,7 @@ const handleCancelBooking = async (b) => {
         <footer className="site-footer" style={{ height: '50px', borderTop: `1px solid ${theme.border}`, backgroundColor: '#0d0a0a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 80px', fontSize: '0.7rem', color: '#666', letterSpacing: '1px' }}>
           <div>© {new Date().getFullYear()} NATALIER BEAUTY.</div>
           <button onClick={() => setCurrentPage('admin')} style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '2px' }}>
-            Staff Portal
+            Created By ElVato Khubulia
           </button>
         </footer>
       )}
