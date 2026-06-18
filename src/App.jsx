@@ -18,42 +18,94 @@ const slideshowImages = [
 const GlobalStyle = () => (
   <style>{`
     :root { max-width: 100% !important; margin: 0 !important; padding: 0 !important; }
-    html, body { margin: 0 !important; padding: 0 !important; width: 100vw; height: 100vh; overflow: hidden; background-color: #0d0a12; color: #fff; }
-    #root { width: 100vw; height: 100vh; display: flex; flex-direction: column; background-color: #0d0a12; }
+    html, body { margin: 0 !important; padding: 0 !important; width: 100vw; height: 100vh; overflow: hidden; background-color: #0d0a0a; color: #fff; }
+    #root { width: 100vw; height: 100vh; display: flex; flex-direction: column; background-color: #0d0a0a; }
     * { box-sizing: border-box; font-family: 'Noto Sans Georgian', sans-serif; }
     
-    .glow-box { border: 1px solid rgba(213, 63, 140, 0.3); box-shadow: 0 0 25px rgba(213, 63, 140, 0.1); }
-    .glow-box:hover { border-color: #d53f8c; box-shadow: 0 0 35px rgba(213, 63, 140, 0.3); }
+    .glow-box { border: 1px solid rgba(220, 38, 38, 0.3); box-shadow: 0 0 25px rgba(220, 38, 38, 0.1); }
+    .glow-box:hover { border-color: #dc2626; box-shadow: 0 0 35px rgba(220, 38, 38, 0.3); }
     
-    .icon-card { border: 1px solid #1a1020; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: #130d16; }
-    .icon-card:hover { border-color: #d53f8c; box-shadow: 0 0 20px rgba(213, 63, 140, 0.25); transform: translateY(-3px); }
+    .icon-card { border: 1px solid #1a1010; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: #130808; }
+    .icon-card:hover { border-color: #dc2626; box-shadow: 0 0 20px rgba(220, 38, 38, 0.25); transform: translateY(-3px); }
     
-    .master-card { border: 1px solid #222; background: #120d16; transition: all 0.3s ease; }
-    .master-card:hover { border-color: #d53f8c; box-shadow: 0 0 20px rgba(213, 63, 140, 0.2); background: #121212; }
+    .master-card { border: 1px solid #222; background: #120808; transition: all 0.3s ease; }
+    .master-card:hover { border-color: #dc2626; box-shadow: 0 0 20px rgba(220, 38, 38, 0.2); background: #121212; }
     
-    input, select, textarea { border: 1px solid #222 !important; transition: all 0.3s !important; background-color: #150f18 !important; color: #fff !important; }
-    input:focus, select:focus, textarea:focus { border-color: #d53f8c !important; box-shadow: 0 0 15px rgba(213, 63, 140, 0.2) !important; outline: none; }
+    input, select, textarea { border: 1px solid #222 !important; transition: all 0.3s !important; background-color: #150808 !important; color: #fff !important; }
+    input:focus, select:focus, textarea:focus { border-color: #dc2626 !important; box-shadow: 0 0 15px rgba(220, 38, 38, 0.3) !important; outline: none; }
     
     .admin-tab { background: none; border: none; padding: 15px 20px; color: #888; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem; border-bottom: 2px solid transparent; transition: all 0.3s; display: flex; align-items: center; }
-    .admin-tab.active { color: #d53f8c; border-bottom-color: #d53f8c; background: rgba(213,63,140,0.05); }
+    .admin-tab.active { color: #dc2626; border-bottom-color: #dc2626; background: rgba(220,38,38,0.05); }
 
     .overlap-avatar { transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1); filter: grayscale(40%); }
     .overlap-avatar:hover { transform: scale(1.05) translateY(-5px) !important; filter: grayscale(0%); z-index: 999 !important; }
-    .overlap-avatar.active { filter: grayscale(0%); border-color: #d53f8c !important; box-shadow: 0 0 25px rgba(213, 63, 140, 0.4); }
+    .overlap-avatar.active { filter: grayscale(0%); border-color: #dc2626 !important; box-shadow: 0 0 25px rgba(220, 38, 38, 0.5); }
 
     .gallery-grid-item { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    .file-input-label { border: 1px dashed #333; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; background: #130d16; color: #aaa; transition: all 0.3s; font-size: 0.8rem; }
-    .file-input-label:hover { border-color: #d53f8c; color: #fff; background: #150f18; }
+    .file-input-label { border: 1px dashed #333; padding: 15px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; background: #130808; color: #aaa; transition: all 0.3s; font-size: 0.8rem; }
+    .file-input-label:hover { border-color: #dc2626; color: #fff; background: #150808; }
 
-    .day-badge { padding: 10px 15px; border: 1px solid #222; background: #130d16; color: #666; cursor: pointer; font-size: 0.8rem; text-align: center; transition: all 0.2s; font-weight: 600; }
-    .day-badge.active { background: rgba(213, 63, 140, 0.15); border-color: #d53f8c; color: #fff; }
+    .day-badge { padding: 10px 15px; border: 1px solid #222; background: #130808; color: #666; cursor: pointer; font-size: 0.8rem; text-align: center; transition: all 0.2s; font-weight: 600; }
+    .day-badge.active { background: rgba(220, 38, 38, 0.15); border-color: #dc2626; color: #fff; }
 
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #0d0a12; }
+    ::-webkit-scrollbar-track { background: #0d0a0a; }
     ::-webkit-scrollbar-thumb { background: #222; }
-    ::-webkit-scrollbar-thumb:hover { background: #d53f8c; }
+    ::-webkit-scrollbar-thumb:hover { background: #dc2626; }
+
+    /* ================= RESPONSIVE / MOBILE ================= */
+    @media (max-width: 900px) {
+      html, body, #root { height: auto !important; min-height: 100vh !important; overflow-x: hidden !important; overflow-y: auto !important; }
+      .app-shell { height: auto !important; min-height: 100vh !important; }
+      .main-content-area { height: auto !important; overflow: visible !important; }
+
+      .site-nav { height: auto !important; flex-direction: column !important; padding: 18px 20px !important; gap: 14px !important; }
+      .site-nav h1 { font-size: 1.05rem !important; letter-spacing: 2px !important; }
+      .nav-links { gap: 22px !important; flex-wrap: wrap !important; justify-content: center !important; }
+      .nav-links button { font-size: 0.75rem !important; letter-spacing: 1px !important; }
+
+      .home-page { flex-direction: column !important; height: auto !important; }
+      .home-hero { width: 100% !important; height: 320px !important; flex-shrink: 0; }
+      .hero-eyebrow { font-size: 0.7rem !important; letter-spacing: 2px !important; }
+      .hero-title { font-size: 1.7rem !important; margin: 10px 0 !important; }
+      .hero-text { left: 20px !important; right: 20px !important; bottom: 8% !important; max-width: 90% !important; }
+      .home-form-panel { width: 100% !important; height: auto !important; padding: 30px 18px !important; border-left: none !important; border-top: 1px solid #1a1010 !important; }
+      .booking-card { padding: 32px 22px !important; max-width: 100% !important; }
+
+      .gallery-page { padding: 36px 16px !important; }
+      .gallery-category-header { flex-direction: column !important; align-items: flex-start !important; gap: 20px !important; padding: 20px !important; }
+      .avatar-stack { align-self: flex-start !important; max-width: 100% !important; overflow-x: auto !important; }
+
+      .site-footer { flex-direction: column !important; height: auto !important; padding: 16px 20px !important; gap: 8px !important; text-align: center !important; }
+
+      .modal-box { padding: 28px 20px !important; }
+      .modal-overlay { padding: 14px !important; }
+
+      .admin-tabs-row { flex-direction: column !important; align-items: stretch !important; padding: 0 !important; }
+      .admin-tabs { flex-wrap: wrap !important; }
+      .admin-tab { padding: 12px 14px !important; font-size: 0.68rem !important; flex: 1 1 auto; justify-content: center; }
+      .admin-content { padding: 24px 16px !important; }
+      .admin-masters-layout, .admin-config-layout { flex-direction: column !important; gap: 24px !important; }
+      .admin-masters-layout > form, .admin-config-layout .config-sidebar { width: 100% !important; }
+      .table-scroll { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+      .table-scroll table { min-width: 640px; }
+      .gallery-grid { grid-template-columns: 1fr !important; }
+      .gallery-grid-item { height: 260px !important; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title { font-size: 1.4rem !important; }
+      .nav-links { gap: 14px !important; }
+      .nav-links button { font-size: 0.68rem !important; }
+      .time-slot-grid { grid-template-columns: repeat(2, 1fr) !important; }
+      .day-picker button { width: 56px !important; height: 68px !important; }
+      .master-card { flex-direction: column !important; align-items: center !important; text-align: center !important; }
+      .master-card > div { align-items: center !important; }
+      .master-card > div > div { justify-content: center !important; }
+      .about-page { padding: 28px 14px !important; }
+    }
   `}</style>
 );
 
@@ -64,33 +116,33 @@ const ContactMap = () => {
 // გუგლის რუკის ოფიციალური ემბედ ლინკი
 const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
   return (
-    <div style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '40px 20px', backgroundColor: '#0d0a12' }}>
+    <div className="about-page" style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '40px 20px', backgroundColor: '#0d0a0a' }}>
       
       {/* სათაური პრემიუმ სტილში */}
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '35px' }}>
-        <span style={{ color: '#d53f8c', letterSpacing: '3px', fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: '700' }}>მოგვაგენით</span>
+        <span style={{ color: '#dc2626', letterSpacing: '3px', fontSize: '0.8rem', textTransform: 'uppercase', fontWeight: '700' }}>მოგვაგენით</span>
         <h2 style={{ fontSize: '2rem', fontWeight: '300', margin: '10px 0 0 0', letterSpacing: '1px', color: '#fff' }}>კონტაქტი & ლოკაცია</h2>
-        <div style={{ width: '60px', height: '1px', backgroundColor: '#d53f8c', marginTop: '15px' }} />
+        <div style={{ width: '60px', height: '1px', backgroundColor: '#dc2626', marginTop: '15px' }} />
       </div>
 
       {/* ძირითადი ბლოკი - მობილურზე ავტომატურად ჩამოდის დაბლა */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '30px', maxWidth: '1000px', margin: '0 auto' }}>
         
         {/* საინფორმაციო ბარათი */}
-        <div className="glow-box" style={{ backgroundColor: '#120d16', padding: '30px', borderRadius: '8px', border: '1px solid rgba(213,63,140,0.2)' }}>
+        <div className="glow-box" style={{ backgroundColor: '#120808', padding: '30px', borderRadius: '8px', border: '1px solid rgba(220,38,38,0.2)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             <div>
-              <h4 style={{ margin: '0 0 5px 0', color: '#d53f8c', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>📍 მისამართი</h4>
+              <h4 style={{ margin: '0 0 5px 0', color: '#dc2626', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>📍 მისამართი</h4>
               <p style={{ margin: 0, color: '#fff', fontSize: '1rem', fontWeight: '300' }}>{address}</p>
             </div>
             
             <div>
-              <h4 style={{ margin: '0 0 5px 0', color: '#d53f8c', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>📞 ტელეფონი</h4>
+              <h4 style={{ margin: '0 0 5px 0', color: '#dc2626', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>📞 ტელეფონი</h4>
               <p style={{ margin: 0, color: '#fff', fontSize: '1rem', fontWeight: '300' }}>+995 555 26 56 46</p>
             </div>
 
             <div>
-              <h4 style={{ margin: '0 0 5px 0', color: '#d53f8c', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>⏰ სამუშაო საათები</h4>
+              <h4 style={{ margin: '0 0 5px 0', color: '#dc2626', fontSize: '0.9rem', letterSpacing: '1px', textTransform: 'uppercase' }}>⏰ სამუშაო საათები</h4>
               <p style={{ margin: 0, color: '#aaa', fontSize: '0.95rem', fontWeight: '300' }}>
                 ორშაბათი - კვირა: 10:00 - 20:00
               </p>
@@ -99,7 +151,7 @@ const embedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(address)}&
         </div>
 
         {/* Google Maps ინტერაქტიული რუკა */}
-        <div className="glow-box" style={{ height: '400px', backgroundColor: '#120d16', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(213,63,140,0.2)' }}>
+        <div className="glow-box" style={{ height: '400px', backgroundColor: '#120808', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(220,38,38,0.2)' }}>
           <iframe
             title="სალონის რუკა"
             width="100%"
@@ -528,18 +580,36 @@ const handleCancelBooking = async (b) => {
     : dbBookings.filter(b => b.master_name === bookingFilterMaster);
 
   const filteredMasters = dbMasters.filter(m => m.service === booking.service);
-  const theme = { bg: '#0d0a12', text: '#ffffff', accent: '#d53f8c', border: '#1a1020' };
+  const theme = { bg: '#0d0a0a', text: '#ffffff', accent: '#dc2626', border: '#1a1010' };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: theme.bg, color: theme.text }}>
+    <div className="app-shell" style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: theme.bg, color: theme.text }}>
       <GlobalStyle />
       
       {/* --- HEADER --- */}
-      <nav style={{ height: '90px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 80px', borderBottom: `1px solid ${theme.border}`, backgroundColor: '#FFF5F8', zIndex: 100 }}>
-        <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '800', letterSpacing: '3px', textTransform: 'uppercase' }}>
-          <span style={{ color: theme.accent, textShadow: '0 0 10px rgba(213,63,140,0.5)' }}>NATALIER</span> <span style={{ color: theme.accent, textShadow: '0 0 10px rgba(213,63,140,0.5)' }}>BEAUTY</span>
-        </h1>
-        <div style={{ display: 'flex', gap: '50px' }}>
+      <nav className="site-nav" style={{ height: '90px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 80px', borderBottom: `1px solid ${theme.border}`, backgroundColor: '#0d0a0a', zIndex: 100 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          {/* NATALIER ლოგო */}
+          <img
+            src="/logo.png"
+            alt="Natalier Logo"
+            style={{
+              height: '58px',
+              width: 'auto',
+              flexShrink: 0,
+              filter: 'drop-shadow(0 0 6px rgba(220,38,38,0.0))',
+              transition: 'filter 0.35s ease',
+              cursor: 'pointer'
+            }}
+            onMouseEnter={e => e.currentTarget.style.filter = 'drop-shadow(0 0 8px rgba(220,38,38,1)) drop-shadow(0 0 18px rgba(220,38,38,0.7)) drop-shadow(0 0 40px rgba(220,38,38,0.4))'}
+            onMouseLeave={e => e.currentTarget.style.filter = 'drop-shadow(0 0 6px rgba(220,38,38,0.0))'}
+          />
+          <h1 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '800', letterSpacing: '3px', textTransform: 'uppercase' }}>
+            <span style={{ color: '#dc2626', textShadow: '0 0 10px rgba(220,38,38,0.7), 0 0 25px rgba(220,38,38,0.4), 0 0 50px rgba(220,38,38,0.2)' }}>NATALIER</span>{' '}
+            <span style={{ color: '#dc2626', textShadow: '0 0 10px rgba(220,38,38,0.7), 0 0 25px rgba(220,38,38,0.4), 0 0 50px rgba(220,38,38,0.2)' }}>BEAUTY</span>
+          </h1>
+        </div>
+        <div className="nav-links" style={{ display: 'flex', gap: '50px' }}>
           {[
             { id: 'home', label: 'მთავარი' },
             { id: 'gallery', label: 'გალერეა' },
@@ -547,7 +617,7 @@ const handleCancelBooking = async (b) => {
           ].map(page => (
             <button key={page.id} onClick={() => { setCurrentPage(page.id); window.location.hash = ''; }} style={{
               background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.85rem', fontWeight: currentPage === page.id ? '600' : '400',
-              color: currentPage === page.id ? theme.accent : '#000000', textTransform: 'uppercase', letterSpacing: '2px',
+              color: currentPage === page.id ? theme.accent : '#aaaaaa', textTransform: 'uppercase', letterSpacing: '2px',
               borderBottom: currentPage === page.id ? `2px solid ${theme.accent}` : '2px solid transparent', paddingBottom: '8px', transition: 'all 0.3s'
             }}>
               {page.label}
@@ -557,12 +627,12 @@ const handleCancelBooking = async (b) => {
       </nav>
 
       {/* --- MAIN CONTENT --- */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
+      <div className="main-content-area" style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
         
         {/* გვერდი 1: მთავარი */}
         {currentPage === 'home' && (
-          <div style={{ display: 'flex', width: '100%', height: '100%' }}>
-            <div style={{ width: '55%', height: '100%', position: 'relative' }}>
+          <div className="home-page" style={{ display: 'flex', width: '100%', height: '100%' }}>
+            <div className="home-hero" style={{ width: '55%', height: '100%', position: 'relative' }}>
               {slideshowImages.map((img, index) => (
                 <div key={index} style={{
                   position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
@@ -570,16 +640,16 @@ const handleCancelBooking = async (b) => {
                   opacity: index === currentImageIndex ? 0.45 : 0, transition: 'opacity 2s ease-in-out'
                 }} />
               ))}
-              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to right, transparent, #0d0a12)' }} />
-              <div style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '70%' }}>
-                <span style={{ color: theme.accent, textTransform: 'uppercase', letterSpacing: '4px', fontSize: '0.85rem', fontWeight: '700' }}>Haute Couture Salon</span>
-                <h1 style={{ fontSize: '3.2rem', fontWeight: '300', letterSpacing: '1px', margin: '15px 0', lineHeight: '1.2' }}>აღმოაჩინე ესთეტიკის ახალი განზომილება</h1>
+              <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', background: 'linear-gradient(to right, transparent, #0d0a0a)' }} />
+              <div className="hero-text" style={{ position: 'absolute', bottom: '10%', left: '10%', maxWidth: '70%' }}>
+                <span className="hero-eyebrow" style={{ color: theme.accent, textTransform: 'uppercase', letterSpacing: '4px', fontSize: '0.85rem', fontWeight: '700' }}>Haute Couture Salon</span>
+                <h1 className="hero-title" style={{ fontSize: '3.2rem', fontWeight: '300', letterSpacing: '1px', margin: '15px 0', lineHeight: '1.2' }}>აღმოაჩინე ესთეტიკის ახალი განზომილება</h1>
                 <div style={{ width: '60px', height: '1px', backgroundColor: theme.accent }} />
               </div>
             </div>
 
-            <div style={{ width: '45%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '40px', backgroundColor: '#0e0b14', borderLeft: `1px solid ${theme.border}` }}>
-              <div className="glow-box" style={{ width: '100%', maxWidth: '440px', backgroundColor: '#120d16', padding: '45px 40px', borderRadius: '0px' }}>
+            <div className="home-form-panel" style={{ width: '45%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', padding: '40px', backgroundColor: '#0e0808', borderLeft: `1px solid ${theme.border}` }}>
+              <div className="glow-box booking-card" style={{ width: '100%', maxWidth: '440px', backgroundColor: '#120808', padding: '45px 40px', borderRadius: '0px' }}>
                 <h3 style={{ margin: '0 0 35px 0', display: 'flex', alignItems: 'center', gap: '12px', fontSize: '1.2rem', fontWeight: '400', letterSpacing: '2px', textTransform: 'uppercase' }}>
                   <CalendarDays size={20} color={theme.accent} /> ონლაინ რეზერვაცია
                 </h3>
@@ -604,7 +674,7 @@ const handleCancelBooking = async (b) => {
                     </div>
 
                     {booking.master && (
-                      <div onClick={() => setShowMasterModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', border: `1px solid rgba(213,63,140,0.3)`, backgroundColor: '#111', cursor: 'pointer' }}>
+                      <div onClick={() => setShowMasterModal(true)} style={{ display: 'flex', alignItems: 'center', gap: '15px', padding: '12px 15px', border: `1px solid rgba(220,38,38,0.3)`, backgroundColor: '#111', cursor: 'pointer' }}>
                         <img src={booking.master.photo} alt="" style={{ width: '40px', height: '40px', objectFit: 'cover', border: `1px solid ${theme.accent}` }} />
                         <div style={{ flex: 1 }}>
                           <div style={{ fontSize: '0.85rem', fontWeight: '600' }}>{booking.master.name}</div>
@@ -639,7 +709,7 @@ const handleCancelBooking = async (b) => {
 
         {/* გვერდი 2: გალერეა */}
         {currentPage === 'gallery' && (
-          <div style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '60px 80px' }}>
+          <div className="gallery-page" style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '60px 80px' }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '60px' }}>
               <span style={{ color: theme.accent, letterSpacing: '3px', fontSize: '0.8rem', textTransform: 'uppercase' }}>Luxury Showcase</span>
               <h2 style={{ fontSize: '2.2rem', fontWeight: '300', margin: '10px 0' }}>პორტფოლიო სექციების მიხედვით</h2>
@@ -655,7 +725,7 @@ const handleCancelBooking = async (b) => {
               return (
                 <div key={serviceCategory} style={{ marginBottom: '80px', borderBottom: '1px solid #111', paddingBottom: '50px' }}>
                   
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px', backgroundColor: '#0d0a12', padding: '25px 40px', border: '1px solid #141414' }}>
+                  <div className="gallery-category-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '35px', backgroundColor: '#0d0a0a', padding: '25px 40px', border: '1px solid #141414' }}>
                     <div>
                       <h3 style={{ margin: 0, fontSize: '1.4rem', fontWeight: '300', letterSpacing: '2px', textTransform: 'uppercase', color: '#fff' }}>
                         {serviceCategory === 'მანიკური' ? 'მანიკური & პედიკური' : serviceCategory}
@@ -667,7 +737,7 @@ const handleCancelBooking = async (b) => {
                       )}
                     </div>
 
-                    <div style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '80px', width: `${100 + (categoryMasters.length * 40)}px` }}>
+                    <div className="avatar-stack" style={{ position: 'relative', display: 'flex', alignItems: 'center', height: '80px', width: `${100 + (categoryMasters.length * 40)}px` }}>
                       {categoryMasters.map((m, index) => {
                         const isActive = currentActiveMasterId === m.id;
                         return (
@@ -677,7 +747,7 @@ const handleCancelBooking = async (b) => {
                             onClick={() => setActiveGalleryMasters({ ...activeGalleryMasters, [serviceCategory]: m.id })}
                             style={{
                               position: 'absolute', left: `${index * 35}px`, zIndex: isActive ? 50 : index, cursor: 'pointer',
-                              width: '65px', height: '65px', borderRadius: '50%', border: isActive ? '2px solid #d53f8c' : '2px solid #222',
+                              width: '65px', height: '65px', borderRadius: '50%', border: isActive ? '2px solid #dc2626' : '2px solid #222',
                               overflow: 'hidden', boxShadow: '-10px 0 15px rgba(0,0,0,0.5)', transform: isActive ? 'scale(1.15)' : 'scale(1)'
                             }}
                             title={m.name}
@@ -689,9 +759,9 @@ const handleCancelBooking = async (b) => {
                     </div>
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
+                  <div className="gallery-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '20px' }}>
                     {masterPhotos.length > 0 ? masterPhotos.map((img) => (
-                      <div key={img.id} className="gallery-grid-item" style={{ position: 'relative', overflow: 'hidden', height: '320px', border: '1px solid #160f19', backgroundColor: '#120d16' }}>
+                      <div key={img.id} className="gallery-grid-item" style={{ position: 'relative', overflow: 'hidden', height: '320px', border: '1px solid #160808', backgroundColor: '#120808' }}>
                         <img src={img.image_url} alt="Master work" style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'} />
                       </div>
                     )) : (
@@ -706,28 +776,6 @@ const handleCancelBooking = async (b) => {
           </div>
         )}
 
-        {/* --- MAIN CONTENT --- */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden', position: 'relative' }}>
-        
-        {/* გვერდი 1: მთავარი */}
-        {currentPage === 'home' && (
-          <div style={{ display: 'flex', width: '100%', height: '100%' }}>
-             {/* ...შენი ძველი კოდი... */}
-          </div>
-        )}
-
-        {/* გვერდი 2: გალერეა */}
-        {currentPage === 'gallery' && (
-          <div style={{ width: '100%', height: '100%', overflowY: 'auto', padding: '60px 80px' }}>
-             {/* ...შენი ძველი კოდი... */}
-          </div>
-        )}
-
-        
-
-      </div>
-
-
         {/* გვერდი 3: ჩვენს შესახებ */}
         {currentPage === 'about' && (
           <ContactMap />
@@ -735,12 +783,12 @@ const handleCancelBooking = async (b) => {
 
         {/* გვერდი 4: ადმინ პანელი */}
         {currentPage === 'admin' && (
-          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#FFF5F8' }}>
+          <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column', backgroundColor: '#0d0a0a' }}>
             
             {!userSession ? (
               <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-                <div className="glow-box" style={{ width: '100%', maxWidth: '400px', backgroundColor: '#120d16', padding: '45px 40px', textAlign: 'center' }}>
-                  <div style={{ display: 'inline-flex', padding: '15px', backgroundColor: 'rgba(213,63,140,0.05)', border: `1px solid ${theme.accent}`, marginBottom: '25px', color: theme.accent }}>
+                <div className="glow-box" style={{ width: '100%', maxWidth: '400px', backgroundColor: '#120808', padding: '45px 40px', textAlign: 'center' }}>
+                  <div style={{ display: 'inline-flex', padding: '15px', backgroundColor: 'rgba(220,38,38,0.05)', border: `1px solid ${theme.accent}`, marginBottom: '25px', color: theme.accent }}>
                     <Lock size={26} />
                   </div>
                   <h2 style={{ fontSize: '1.1rem', fontWeight: '400', letterSpacing: '2px', textTransform: 'uppercase', margin: '0 0 10px 0' }}>მართვის ცენტრი</h2>
@@ -761,8 +809,8 @@ const handleCancelBooking = async (b) => {
               </div>
             ) : (
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1a1020', backgroundColor: '#120d16', padding: '0 40px' }}>
-                  <div style={{ display: 'flex' }}>
+                <div className="admin-tabs-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #1a1010', backgroundColor: '#120808', padding: '0 40px' }}>
+                  <div className="admin-tabs" style={{ display: 'flex' }}>
                     <button className={`admin-tab ${adminTab === 'bookings' ? 'active' : ''}`} onClick={() => setAdminTab('bookings')}><LayoutDashboard size={14} style={{marginRight:8}}/> ჯავშნები</button>
                     <button className={`admin-tab ${adminTab === 'masters' ? 'active' : ''}`} onClick={() => setAdminTab('masters')}><Users size={14} style={{marginRight:8}}/> სპეციალისტები</button>
                     <button className={`admin-tab ${adminTab === 'gallery' ? 'active' : ''}`} onClick={() => setAdminTab('gallery')}><ImageIcon size={14} style={{marginRight:8}}/> გალერეა</button>
@@ -773,7 +821,7 @@ const handleCancelBooking = async (b) => {
                   </button>
                 </div>
 
-                <div style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
+                <div className="admin-content" style={{ flex: 1, padding: '40px', overflowY: 'auto' }}>
                   
                   {/* TAB 1: ჯავშნები */}
                   {adminTab === 'bookings' && (
@@ -781,7 +829,7 @@ const handleCancelBooking = async (b) => {
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '25px' }}>
                         <h2 style={{ fontSize: '1.4rem', fontWeight: '400', margin: 0 }}>შემოსული რეზერვაციები</h2>
                         
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#120d16', padding: '6px 15px', border: '1px solid #1a1020' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', backgroundColor: '#120808', padding: '6px 15px', border: '1px solid #1a1010' }}>
                           <Filter size={14} color={theme.accent} />
                           <select 
                             value={bookingFilterMaster} 
@@ -796,6 +844,7 @@ const handleCancelBooking = async (b) => {
                         </div>
                       </div>
 
+                      <div className="table-scroll">
                       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                         <thead>
                           <tr style={{ borderBottom: '1px solid #222', color: '#666', fontSize: '0.85rem' }}>
@@ -822,13 +871,14 @@ const handleCancelBooking = async (b) => {
                           )}
                         </tbody>
                       </table>
+                      </div>
                     </div>
                   )}
 
                   {/* TAB 2: სპეციალისტები */}
                   {adminTab === 'masters' && (
-                    <div style={{ display: 'flex', gap: '40px' }}>
-                      <form onSubmit={addMaster} style={{ width: '350px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: '#120d16', padding: '25px', border: '1px solid #1a1020' }}>
+                    <div className="admin-masters-layout" style={{ display: 'flex', gap: '40px' }}>
+                      <form onSubmit={addMaster} style={{ width: '350px', display: 'flex', flexDirection: 'column', gap: '15px', backgroundColor: '#120808', padding: '25px', border: '1px solid #1a1010' }}>
                         <h3 style={{ fontSize: '1rem', margin: '0 0 10px 0', textTransform: 'uppercase', color: theme.accent }}>ახალი სპეციალისტი</h3>
                         <input type="text" placeholder="სახელი გვარი" required value={newMaster.name} onChange={e => setNewMaster({...newMaster, name: e.target.value})} style={{ padding: '12px' }} />
                         <input type="text" placeholder="პოზიცია" required value={newMaster.role} onChange={e => setNewMaster({...newMaster, role: e.target.value})} style={{ padding: '12px' }} />
@@ -859,7 +909,7 @@ const handleCancelBooking = async (b) => {
                         <h3 style={{ fontSize: '1.1rem', fontWeight: '400', marginBottom: '20px' }}>არსებული სპეციალისტები</h3>
                         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '15px' }}>
                           {dbMasters.map(m => (
-                            <div key={m.id} style={{ backgroundColor: '#120d16', border: '1px solid #1a1020', padding: '15px', display: 'flex', gap: '15px', alignItems: 'center' }}>
+                            <div key={m.id} style={{ backgroundColor: '#120808', border: '1px solid #1a1010', padding: '15px', display: 'flex', gap: '15px', alignItems: 'center' }}>
                               <img src={m.photo} alt="" style={{ width: '60px', height: '60px', objectFit: 'cover' }} />
                               <div style={{ flex: 1 }}>
                                 <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>{m.name}</div>
@@ -877,7 +927,7 @@ const handleCancelBooking = async (b) => {
                   {/* TAB 3: გალერეა */}
                   {adminTab === 'gallery' && (
                     <div>
-                      <form onSubmit={addGalleryImage} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '40px', maxWidth: '500px', backgroundColor: '#FFF5F8', padding: '25px', border: '1px solid #1a1020' }}>
+                      <form onSubmit={addGalleryImage} style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '40px', maxWidth: '500px', backgroundColor: '#0d0a0a', padding: '25px', border: '1px solid #1a1010' }}>
                         <h3 style={{ fontSize: '1rem', margin: '0', textTransform: 'uppercase', color: theme.accent }}>ნამუშევრის დამატება</h3>
                         
                         <select required value={selectedGalleryMasterId} onChange={e => setSelectedGalleryMasterId(e.target.value)} style={{ width: '100%', padding: '14px' }}>
@@ -903,7 +953,7 @@ const handleCancelBooking = async (b) => {
                         {dbGallery.map(img => {
                           const ownerMaster = dbMasters.find(m => m.id === img.master_id);
                           return (
-                            <div key={img.id} style={{ position: 'relative', height: '180px', border: '1px solid #1a1020' }}>
+                            <div key={img.id} style={{ position: 'relative', height: '180px', border: '1px solid #1a1010' }}>
                               <img src={img.image_url} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                               <div style={{ position: 'absolute', bottom: 0, left: 0, width: '100%', backgroundColor: 'rgba(0,0,0,0.75)', padding: '5px', fontSize: '0.7rem', color: theme.accent, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                                 {ownerMaster ? ownerMaster.name : 'უცნობი'}
@@ -918,16 +968,16 @@ const handleCancelBooking = async (b) => {
 
                   {/* TAB 4: განრიგის & საათების მართვა */}
                   {adminTab === 'config' && (
-                    <div style={{ display: 'flex', gap: '40px' }}>
-                      <div style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                    <div className="admin-config-layout" style={{ display: 'flex', gap: '40px' }}>
+                      <div className="config-sidebar" style={{ width: '300px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <h3 style={{ fontSize: '1rem', textTransform: 'uppercase', color: '#666', letterSpacing: '1px', marginBottom: '10px' }}>აირჩიეთ სპეციალისტი</h3>
                         {dbMasters.map(m => (
                           <div 
                             key={m.id} 
                             onClick={() => setSelectedTimeMasterId(m.id)}
                             style={{ 
-                              padding: '15px', backgroundColor: selectedTimeMasterId === m.id ? 'rgba(213,63,140,0.08)' : '#120d16',
-                              border: selectedTimeMasterId === m.id ? `1px solid ${theme.accent}` : '1px solid #1a1020',
+                              padding: '15px', backgroundColor: selectedTimeMasterId === m.id ? 'rgba(220,38,38,0.08)' : '#120808',
+                              border: selectedTimeMasterId === m.id ? `1px solid ${theme.accent}` : '1px solid #1a1010',
                               cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px', transition: 'all 0.3s'
                             }}
                           >
@@ -940,10 +990,10 @@ const handleCancelBooking = async (b) => {
                         ))}
                       </div>
 
-                      <div style={{ flex: 1, backgroundColor: '#120d16', border: '1px solid #1a1020', padding: '30px' }}>
+                      <div style={{ flex: 1, backgroundColor: '#120808', border: '1px solid #1a1010', padding: '30px' }}>
                         {activeTimeMaster ? (
                           <div>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px', borderBottom: '1px solid #1a1020', paddingBottom: '20px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '15px', marginBottom: '25px', borderBottom: '1px solid #1a1010', paddingBottom: '20px' }}>
                               <img src={activeTimeMaster.photo} alt="" style={{ width: '55px', height: '55px', objectFit: 'cover', border: `1px solid ${theme.accent}` }} />
                               <div>
                                 <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: '400' }}><span style={{ color: theme.accent }}>{activeTimeMaster.name}</span>-ის განრიგი</h3>
@@ -970,7 +1020,7 @@ const handleCancelBooking = async (b) => {
                               </div>
                             </div>
 
-                            <div style={{ width: '100%', height: '1px', backgroundColor: '#1a1020', marginBottom: '30px' }} />
+                            <div style={{ width: '100%', height: '1px', backgroundColor: '#1a1010', marginBottom: '30px' }} />
 
                             <div>
                               <h4 style={{ fontSize: '0.85rem', textTransform: 'uppercase', color: '#aaa', letterSpacing: '1px', marginBottom: '15px' }}>თავისუფალი საათების დამატება:</h4>
@@ -982,7 +1032,7 @@ const handleCancelBooking = async (b) => {
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
                                 {activeTimeMaster.time_slots && activeTimeMaster.time_slots.length > 0 ? (
                                   activeTimeMaster.time_slots.map(ts => (
-                                    <div key={ts} style={{ backgroundColor: '#150f18', border: '1px solid #222', padding: '12px 18px', display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                    <div key={ts} style={{ backgroundColor: '#150808', border: '1px solid #222', padding: '12px 18px', display: 'flex', alignItems: 'center', gap: '15px' }}>
                                       <span style={{ fontWeight: '600', fontSize: '0.9rem' }}>{ts}</span>
                                       <X size={14} color="#555" style={{ cursor: 'pointer' }} onClick={() => deleteTimeSlotFromMaster(ts)} />
                                     </div>
@@ -1009,9 +1059,9 @@ const handleCancelBooking = async (b) => {
 
       {/* --- FOOTER --- */}
       {currentPage !== 'admin' && (
-        <footer style={{ height: '50px', borderTop: `1px solid ${theme.border}`, backgroundColor: '#FFF5F8', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 80px', fontSize: '0.7rem', color: '#444', letterSpacing: '1px' }}>
+        <footer className="site-footer" style={{ height: '50px', borderTop: `1px solid ${theme.border}`, backgroundColor: '#0d0a0a', display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 80px', fontSize: '0.7rem', color: '#666', letterSpacing: '1px' }}>
           <div>© {new Date().getFullYear()} NATALIER BEAUTY.</div>
-          <button onClick={() => setCurrentPage('admin')} style={{ background: 'none', border: 'none', color: '#333', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '2px' }}>
+          <button onClick={() => setCurrentPage('admin')} style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer', textTransform: 'uppercase', fontSize: '0.65rem', letterSpacing: '2px' }}>
             Staff Portal
           </button>
         </footer>
@@ -1019,8 +1069,8 @@ const handleCancelBooking = async (b) => {
 
       {/* MODAL 1: ოსტატის შერჩევა */}
       {showMasterModal && (
-        <div onClick={() => setShowMasterModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-          <div onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a12', border: `1px solid rgba(213,63,140,0.4)`, width: '100%', maxWidth: '820px', padding: '45px', position: 'relative' }}>
+        <div className="modal-overlay" onClick={() => setShowMasterModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <div className="modal-box" onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a0a', border: `1px solid rgba(220,38,38,0.4)`, width: '100%', maxWidth: '820px', padding: '45px', position: 'relative' }}>
             <button onClick={() => setShowMasterModal(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}><X size={22} /></button>
             <h2 style={{ fontSize: '1.4rem', textAlign: 'center', margin: '0 0 8px 0', letterSpacing: '2px', textTransform: 'uppercase' }}>ექსპერტების შერჩევა</h2>
             <p style={{ textAlign: 'center', color: '#666', marginBottom: '35px', fontSize: '0.85rem' }}>მიმდინარე სერვისი: <span style={{color: theme.accent, fontWeight: '600'}}>{booking.service}</span></p>
@@ -1032,7 +1082,7 @@ const handleCancelBooking = async (b) => {
                     <h3 style={{ fontSize: '1.05rem', margin: '0' }}>{master.name}</h3>
                     <div style={{ color: theme.accent, fontSize: '0.75rem', fontWeight: '700', margin: '4px 0 12px 0' }}>{master.role}</div>
                     <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                      {master.skills.map(skill => <span key={skill} style={{ backgroundColor: '#150f18', border: '1px solid #222', padding: '3px 8px', fontSize: '0.7rem', color: '#aaa' }}>{skill}</span>)}
+                      {master.skills.map(skill => <span key={skill} style={{ backgroundColor: '#150808', border: '1px solid #222', padding: '3px 8px', fontSize: '0.7rem', color: '#aaa' }}>{skill}</span>)}
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '0.75rem', color: '#666' }}><Check size={12} color={theme.accent} /> {master.exp} გამოცდილება</div>
                   </div>
@@ -1046,8 +1096,8 @@ const handleCancelBooking = async (b) => {
       {/* MODAL 2: კალენდარი და საათები */}
       {/* MODAL 2: კალენდარი და საათები */}
 {showCalendarModal && (
-  <div onClick={() => setShowCalendarModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-    <div onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a12', border: `1px solid rgba(213,63,140,0.4)`, width: '100%', maxWidth: '520px', padding: '40px', position: 'relative' }}>
+  <div className="modal-overlay" onClick={() => setShowCalendarModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+    <div className="modal-box" onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a0a', border: `1px solid rgba(220,38,38,0.4)`, width: '100%', maxWidth: '520px', padding: '40px', position: 'relative' }}>
       <button onClick={() => setShowCalendarModal(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}><X size={22} /></button>
       <div style={{ textAlign: 'center', marginBottom: '30px' }}>
         <h2 style={{ fontSize: '1.3rem', margin: '0 0 10px 0', letterSpacing: '2px', textTransform: 'uppercase' }}>თარიღი და დრო</h2>
@@ -1057,7 +1107,7 @@ const handleCancelBooking = async (b) => {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '25px' }}>
+      <div className="day-picker" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '25px' }}>
         {availableDays.map((day, idx) => {
           const isSelected = booking.date === day.fullDate;
           const masterWorkingDays = booking.master?.working_days || [0,1,2,3,4,5,6];
@@ -1070,7 +1120,7 @@ const handleCancelBooking = async (b) => {
               style={{
                 flexShrink: 0, width: '65px', height: '75px',
                 border: isSelected ? `1px solid ${theme.accent}` : `1px solid #222`,
-                backgroundColor: isSelected ? 'rgba(213, 63, 140, 0.15)' : '#120d16',
+                backgroundColor: isSelected ? 'rgba(220, 38, 38, 0.15)' : '#120808',
                 cursor: isWorkingDay ? 'pointer' : 'not-allowed',
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 opacity: isWorkingDay ? 1 : 0.25
@@ -1085,7 +1135,7 @@ const handleCancelBooking = async (b) => {
       </div>
 
       {booking.date ? (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '35px' }}>
+        <div className="time-slot-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '35px' }}>
           {booking.master?.time_slots && booking.master.time_slots.length > 0 ? (
             booking.master.time_slots.map((time, idx) => {
               const bookedTimes = dbBookings
@@ -1103,7 +1153,7 @@ const handleCancelBooking = async (b) => {
                     fontSize: '0.85rem',
                     fontWeight: '600',
                     cursor: isBooked ? 'not-allowed' : 'pointer',
-                    backgroundColor: isBooked ? '#1a1020' : isSelected ? theme.accent : '#160f19',
+                    backgroundColor: isBooked ? '#1a1010' : isSelected ? theme.accent : '#160808',
                     color: isBooked ? '#333' : isSelected ? '#fff' : '#aaa',
                     border: isSelected ? `1px solid ${theme.accent}` : '1px solid #222',
                     textDecoration: isBooked ? 'line-through' : 'none'
@@ -1133,8 +1183,8 @@ const handleCancelBooking = async (b) => {
 )}
 {/* MODAL 3: ამოწერა */}
 {showCancelModal && (
-  <div onClick={() => setShowCancelModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-    <div onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a12', border: '1px solid rgba(239,68,68,0.4)', width: '100%', maxWidth: '480px', padding: '40px', position: 'relative' }}>
+  <div className="modal-overlay" onClick={() => setShowCancelModal(false)} style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 2000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+    <div className="modal-box" onClick={e => e.stopPropagation()} style={{ backgroundColor: '#0d0a0a', border: '1px solid rgba(239,68,68,0.4)', width: '100%', maxWidth: '480px', padding: '40px', position: 'relative' }}>
       <button onClick={() => setShowCancelModal(false)} style={{ position: 'absolute', top: '24px', right: '24px', background: 'none', border: 'none', color: '#888', cursor: 'pointer' }}><X size={22} /></button>
       
       <h2 style={{ fontSize: '1.3rem', textAlign: 'center', margin: '0 0 8px 0', letterSpacing: '2px', textTransform: 'uppercase', color: '#ef4444' }}>ჩანიშვნის გაუქმება</h2>
@@ -1198,8 +1248,8 @@ const handleCancelBooking = async (b) => {
 )}
 {/* MODAL 4: OTP დადასტურება */}
 {showOtpModal && (
-  <div style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
-    <div style={{ backgroundColor: '#0d0a12', border: '1px solid rgba(213,63,140,0.4)', width: '100%', maxWidth: '380px', padding: '40px', textAlign: 'center' }}>
+  <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.9)', backdropFilter: 'blur(10px)', zIndex: 3000, display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+    <div className="modal-box" style={{ backgroundColor: '#0d0a0a', border: '1px solid rgba(220,38,38,0.4)', width: '100%', maxWidth: '380px', padding: '40px', textAlign: 'center' }}>
       <h2 style={{ fontSize: '1.2rem', margin: '0 0 10px 0', letterSpacing: '2px', textTransform: 'uppercase' }}>დადასტურება</h2>
       <p style={{ color: '#666', fontSize: '0.85rem', marginBottom: '25px' }}>
         თქვენს ნომერზე გაიგზავნა 4-ციფრიანი კოდი.<br/>შეიყვანეთ ქვემოთ:
